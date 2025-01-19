@@ -1,23 +1,28 @@
-# Use the official Python image
+# Use a lightweight Python image
 FROM python:3.10-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y libnss3 wget && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies for playwright
-RUN apt-get update && apt-get install -y wget curl xvfb libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libxcomposite1 libxrandr2 libgbm-dev libpangocairo-1.0-0 libxdamage1 libxkbcommon0 libasound2 libxshmfence-dev libwayland-server0 libwayland-client0
+# Install Playwright dependencies
+RUN apt-get install -y wget curl xvfb && \
+    apt-get clean
 
-# Install playwright and browsers
+# Install Playwright and Browsers
 RUN pip install playwright && playwright install
 
-# Copy application code
+# Copy requirements and install them
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy your application files
 COPY . .
 
-# Install Python dependencies
-RUN pip install -r requirements.txt
-
-# Expose a port (if needed for the bot; otherwise optional)
+# Expose port if needed
 EXPOSE 8000
 
-# Run the bot
+# Set the entry point for your application
 CMD ["python", "bot.py"]

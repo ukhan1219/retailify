@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+    volumes:
+      - ./cookies.json:/app/cookies.json
+    restart: unless-stopped
+    tty: true
+
+  db:
+    image: nouchka/sqlite3
+    command: /bin/sleep infinity
+    volumes:
+      - ./retailify.db:/db/retailify.db
+    working_dir: /db
+    restart: unless-stopped
