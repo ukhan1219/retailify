@@ -1,20 +1,19 @@
 # Use a lightweight Python image
 FROM python:3.10-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y libnss3 wget && rm -rf /var/lib/apt/lists/*
+# Update package sources and install system dependencies
+RUN apt-get update && \
+    apt-get install -y wget curl xvfb libnss3 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Install Playwright dependencies
-RUN apt-get install -y wget curl xvfb && \
-    apt-get clean
-
-# Install Playwright and Browsers
+# Install Playwright dependencies and browsers
 RUN pip install playwright && playwright install
 
-# Copy requirements and install them
+# Copy requirements and install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
