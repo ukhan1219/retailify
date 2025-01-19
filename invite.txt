@@ -1,0 +1,4 @@
+https://discord.com/oauth2/authorize?client_id=1330638846454661185&permissions=223296&integration_type=0&scope=bot+applications.commands
+
+
+permission integer: 2147690560
